@@ -9,7 +9,7 @@ GAME RULES:
 
 */
 
-var scores, roundScore, activePlayer, gamePlayin, diceHistory, winningScore;
+var scores, roundScore, activePlayer, gamePlayin, dice1History, dice2History, winningScore;
 
 init();
 
@@ -19,7 +19,8 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
         // 1. Random number for both dices
         var dice1 = randomIntFromInterval(1, 6);
         var dice2 = randomIntFromInterval(1, 6);
-        diceHistory.push(dice1, dice2); 
+        dice1History.push(dice1);
+        dice2History.push(dice2);
         
         // 2. Display the result of both dices
         var diceEl1 = document.querySelector('#dice-1');
@@ -31,8 +32,12 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
         diceEl2.src = 'img/dice-' + dice2 + '.png'; 
         
         //3. Update the round score IF the rolled number is NOT 1 or a second 6 in a row
-        if(dice1 !== 1 || dice2 !== 1 ) {
-            if (dice1 === 6 && diceHistory[diceHistory.length - 1] === diceHistory[diceHistory.length - 2]) {
+        if (dice1 !== 1 || dice2 !== 1 ) {
+            if (dice1 === 6 && dice1History[dice1History.length - 1] === dice1History[dice1History.length - 2]) {
+                scores[activePlayer] = 0;
+                document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
+                nextPlayer();
+            } else if (dice2 === 6 && dice2History[dice2History.length - 1] === dice2History[dice2History.length - 2]) {
                 scores[activePlayer] = 0;
                 document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
                 nextPlayer();
@@ -73,7 +78,8 @@ function nextPlayer() {
         //Next player
         activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
         roundSCore = 0;
-        diceHistory = [];
+        dice1History = [];
+        dice2History = [];
 
         document.getElementById('current-0').textContent = '0';
         document.getElementById('current-1').textContent = '0';
@@ -98,7 +104,8 @@ function init() {
     activePlayer = 0; 
     roundScore = 0;
     gamePlaying = true;
-    diceHistory = [];
+    dice1History = [];
+    dice2History = [];
     winningScore = 100;
 
     // Hide the dices
